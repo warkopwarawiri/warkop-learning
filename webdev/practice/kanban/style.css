@@ -1,0 +1,1452 @@
+:root {
+    --primary-color: #2563eb;
+    --delete-color: #dc2626;
+    --bg-gradient: linear-gradient(120deg, #1e293b, #0f172a);
+    --container-bg: #ffffff;
+    --task-bg: #f8fafc;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --column-bg: #f8fafc;
+    --column-width: 450px; /* Increased from 400px */
+    --ticket-border: #DFE1E6;
+    --ticket-shadow: rgba(9, 30, 66, 0.13);
+    --tag-bg: #DFE1E6;
+    --priority-high: #CD372F;
+    --priority-medium: #FF9800;
+    --priority-low: #2D8738;
+    --ticket-hover: #F4F5F7;
+    --date-overdue: #ef4444;
+    --date-today: #f59e0b;
+    --date-upcoming: #22c55e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    padding: 2rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+.todo-container {
+    max-width: 1600px; /* Increased from 1400px */
+    width: 95%; /* Add this to ensure some padding on ultra-wide screens */
+    height: min(90vh, 1000px); /* Increased from 900px */
+    margin: 0 auto;
+    background: var(--container-bg);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.todo-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.todo-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.form-container {
+    margin-bottom: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.input-wrapper {
+    display: flex;
+    gap: 0.75rem;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--ticket-border);
+    transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within {
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.15);
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+#todo-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+#todo-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+#todo-input:focus {
+    outline: none;
+}
+
+.add-task-btn {
+    padding: 0.75rem 1.5rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: auto;
+    white-space: nowrap;
+}
+
+.add-task-btn svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+}
+
+.add-task-btn:hover {
+    background: #1a56db; /* Slightly darker blue */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.add-task-btn:hover svg {
+    transform: rotate(90deg);
+}
+
+button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.2);
+}
+
+.tasks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.tasks-header h2 {
+    font-size: 1.2rem;
+    color: var(--text-primary);
+}
+
+.task-count {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.completed-header {
+    margin-top: 3rem;
+}
+
+#todo-list {
+    list-style: none;
+}
+
+.todo-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 1rem;
+    background: white;
+    margin-bottom: 0.5rem;
+    border-radius: 3px;
+    border: 1px solid var(--ticket-border);
+    box-shadow: 0 1px 2px var(--ticket-shadow);
+    cursor: move;
+    user-select: none;
+    position: relative;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    animation: slideIn 0.3s ease;
+    will-change: transform, opacity;
+    z-index: 1;
+}
+
+.todo-item:hover {
+    background: var(--ticket-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px var(--ticket-shadow);
+    z-index: 2; /* Increase z-index on hover */
+}
+
+.todo-item:has(.status-menu.active),
+.todo-item:has(.delete-menu.active) {
+    z-index: 1000;
+}
+
+.ticket-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.ticket-id {
+    font-family: monospace;
+    color: var(--text-secondary);
+}
+
+.ticket-type {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.ticket-type svg {
+    width: 16px;
+    height: 16px;
+}
+
+.ticket-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 0.25rem 0;
+}
+
+.ticket-metadata {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.priority-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.priority-high { background: var(--priority-high); }
+.priority-medium { background: var(--priority-medium); }
+.priority-low { background: var(--priority-low); }
+
+.ticket-tag {
+    position: relative;
+    background: var(--tag-bg);
+    padding: 0.125rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ticket-tag:hover {
+    background: #E3E6ED;
+}
+
+.status-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 4px);
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 4px;
+    display: none;
+    z-index: 1001; /* Much higher than todo items */
+    min-width: 150px;
+    border: 1px solid var(--ticket-border);
+}
+
+.status-menu.active {
+    display: block;
+    animation: slideDown 0.2s ease;
+    z-index: 1002; /* Ensure active menus are always topmost */
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-primary);
+}
+
+.status-item:hover:not(.disabled) {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.status-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: transparent !important;
+}
+
+.status-item.active {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.delete-btn {
+    position: relative;
+    margin-left: auto;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-secondary);
+    opacity: 0.6;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    min-width: unset;
+}
+
+.delete-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.delete-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 4px);
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 4px;
+    display: none;
+    z-index: 1001; /* Much higher than todo items */
+    min-width: 180px;
+    border: 1px solid var(--ticket-border);
+}
+
+.delete-menu.active {
+    display: block;
+    animation: slideDown 0.2s ease;
+    z-index: 1002; /* Ensure active menus are always topmost */
+}
+
+.delete-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    color: var(--delete-color);
+    font-size: 0.875rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.delete-menu-item:hover {
+    background: rgba(220, 38, 38, 0.1);
+}
+
+.delete-menu-item svg {
+    width: 16px;
+    height: 16px;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.todo-item:hover .delete-btn {
+    opacity: 1;
+}
+
+.delete-btn:hover {
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--delete-color);
+    transform: none;
+    box-shadow: none;
+}
+
+.todo-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 1rem;
+    cursor: pointer;
+}
+
+.todo-item span {
+    flex: 1;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.todo-item:not(.completed) span:hover {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.todo-item.completed {
+    opacity: 0.7;
+    background: #f1f5f9;
+}
+
+.todo-item.completed span {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+}
+
+.todo-item.dragging {
+    opacity: 0.6;
+    background: white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transform: scale(1.02);
+}
+
+.todo-item.drag-over {
+    border: 2px dashed var(--primary-color);
+}
+
+.todo-item.invalid-drop {
+    animation: shake 0.5s ease-in-out;
+    background-color: rgba(220, 38, 38, 0.1); /* Light red background */
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(10px); }
+    75% { transform: translateX(-10px); }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
+    border-radius: 12px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.modal-header h3 {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.close-modal {
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    padding: 0.5rem;
+}
+
+.close-modal:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.form-group {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.field-view,
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    min-height: 52px; /* Consistent height for all fields */
+    padding: 0.875rem 2.5rem 0.875rem 1rem; /* Increase right padding */
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    line-height: 1.5;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    background: white;
+    cursor: pointer;
+}
+
+.field-view:hover {
+    background: white;
+    border-color: #e2e8f0;
+}
+
+.field-view {
+    background: #f8fafc;
+}
+
+.field-view:hover::after {
+    content: '✎';
+    position: absolute;
+    right: 1rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+/* Add specific style for select element only */
+.form-group select {
+    background-color: white;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-position: right 1rem center;
+    background-repeat: no-repeat;
+    background-size: 1rem;
+    cursor: pointer;
+    appearance: none;
+}
+
+/* Style for edit buttons */
+.inline-edit-btn {
+    width: 36px;
+    height: 36px;
+    min-width: unset;
+    padding: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    display: inline-flex; /* Change from flex to inline-flex */
+    align-items: center;
+    justify-content: center;
+    position: relative; /* Add this */
+    display: none;
+}
+
+.inline-edit-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background: rgba(37, 99, 235, 0.05);
+}
+
+.inline-edit-btn[data-mode="save"] {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.inline-edit-btn[data-mode="save"]:hover {
+    background: #1a56db;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.inline-edit-btn svg {
+    width: 20px;
+    height: 20px;
+    position: absolute; /* Add this */
+    top: 50%; /* Add this */
+    left: 50%; /* Add this */
+    transform: translate(-50%, -50%); /* Add this */
+}
+
+.inline-edit-btn .save-icon,
+.inline-edit-btn .edit-icon {
+    pointer-events: none; /* Add this to prevent icon interfering with clicks */
+}
+
+.field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+/* Focus states */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Empty state styling */
+.field-view:empty::before {
+    content: 'Not set';
+    color: var(--text-secondary);
+    font-style: italic;
+    opacity: 0.7;
+}
+
+#task-priority {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+}
+
+#task-priority:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.priority-view {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.priority-view::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.priority-view[data-priority="high"]::before {
+    background: var(--priority-high);
+}
+
+.priority-view[data-priority="medium"]::before {
+    background: var(--priority-medium);
+}
+
+.priority-view[data-priority="low"]::before {
+    background: var(--priority-low);
+}
+
+.modal-footer {
+    padding: 1.25rem 1.5rem;
+    border-top: 2px solid #f1f5f9;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.modal-footer:has(.save-task-btn[style*="display: none"]) {
+    justify-content: flex-end;
+}
+
+.modal-footer button {
+    padding: 0.8rem 1.8rem;
+    font-weight: 500;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.close-modal-btn {
+    background: #f1f5f9;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.close-modal-btn:hover {
+    background: #e2e8f0;
+    transform: none;
+    box-shadow: none;
+}
+
+.save-task-btn {
+    background: var(--primary-color);
+}
+
+.save-task-btn:hover {
+    opacity: 0.9;
+    transform: none;
+}
+
+/* Additional task styles to show details */
+.todo-item .task-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-right: 2.5rem;
+}
+
+.task-due-date {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.kanban-board {
+    display: flex;
+    gap: 2.5rem; /* Increased from 2rem for better spacing */
+    overflow-x: auto;
+    padding: 1rem; /* Add horizontal padding for better spacing on wide screens */
+    min-height: 500px;
+    scroll-behavior: smooth; /* Add smooth scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    flex: 1;
+    min-height: 0; /* Important for Firefox */
+}
+
+/* Hide scrollbar but keep functionality */
+.kanban-board::-webkit-scrollbar {
+    height: 8px;
+}
+
+.kanban-board::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.kanban-board::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.kanban-column {
+    flex: 0 0 var(--column-width);
+    background: var(--column-bg);
+    border-radius: 8px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden; /* Prevent column from growing */
+}
+
+.kanban-column.drag-over {
+    background: rgba(37, 99, 235, 0.1);
+    border: 2px dashed var(--primary-color);
+}
+
+.column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.75rem;
+    background: var(--column-bg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.column-header h2 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.task-list {
+    min-height: 200px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px; /* Give space for scrollbar */
+}
+
+/* Customize scrollbar for task lists */
+.task-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.task-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.task-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.task-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 1024px) {
+    .kanban-board {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+    }
+
+    .kanban-column {
+        flex: 0 0 85%;
+    }
+}
+
+@media (max-width: 640px) {
+    .todo-container {
+        margin: 0;
+        padding: 1.5rem;
+        border-radius: 0;
+    }
+    
+    .input-wrapper {
+        flex-direction: row; /* Keep it in one row */
+        padding: 0.375rem;
+    }
+    
+    #todo-input {
+        font-size: 0.875rem;
+        padding: 0.625rem 0.875rem;
+    }
+    
+    .add-task-btn {
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .add-task-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    button {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .todo-header h1 {
+        font-size: 2rem;
+    }
+}
+
+.field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.inline-edit-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    display: none;
+}
+
+.inline-edit-btn:hover {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+    opacity: 1;
+    border-color: var(--primary-color);
+}
+
+.inline-edit-btn[data-mode="save"] {
+    background: var(--primary-color);
+    color: white;
+    opacity: 1;
+    border-color: var(--primary-color);
+}
+
+.inline-edit-btn[data-mode="save"]:hover {
+    background: #1a56db;
+    border-color: #1a56db;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.inline-edit-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.inline-edit-btn .save-icon {
+    display: none;
+}
+
+.inline-edit-btn[data-mode="save"] .edit-icon {
+    display: none;
+}
+
+.inline-edit-btn[data-mode="save"] .save-icon {
+    display: block;
+}
+
+.field-view {
+    padding: 0.875rem;
+    border: 2px solid transparent;
+    background: var(--task-bg);
+    border-radius: 8px;
+    white-space: normal; /* Default normal for all */
+    color: var(--text-primary);
+    min-height: 48px;
+    line-height: 1.4;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Specific styling for markdown view */
+.field-view.markdown-content {
+    white-space: normal; /* Override any pre-wrap */
+}
+
+/* Preserve whitespace only for textarea content */
+.field-view[id="details-view"] {
+    white-space: normal;
+}
+
+.field-view:hover {
+    background: white;
+    border-color: #e2e8f0;
+}
+
+.field-view {
+    background: #f8fafc;
+}
+
+.field-view:hover::after {
+    content: '✎';
+    position: absolute;
+    right: 1rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.field-view:empty::before {
+    content: 'Not set';
+    color: var(--text-secondary);
+    font-style: italic;
+    opacity: 0.7;
+}
+
+#details-view {
+    min-height: 120px;
+}
+
+/* Remove old styles that are no longer needed */
+.details-header,
+.edit-details-btn,
+.details-view,
+.modal-footer .save-task-btn {
+    display: none;
+}
+
+.form-group input[type="date"] {
+    min-height: 48px;
+    color-scheme: light;
+}
+
+.due-date {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.due-date.overdue {
+    color: var(--date-overdue);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.due-date.today {
+    color: var(--date-today);
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.due-date.upcoming {
+    color: var(--date-upcoming);
+    background: rgba(34, 197, 94, 0.1);
+}
+
+/* Edit mode controls */
+.edit-controls {
+    display: none;
+    gap: 0.25rem;
+    position: static; /* Reset position */
+    transform: none; /* Reset transform */
+}
+
+.edit-controls button {
+    width: 24px;
+    height: 24px;
+    min-width: unset;
+    padding: 0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.edit-controls .apply-btn:hover {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+    border-color: #22c55e;
+}
+
+.edit-controls .cancel-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: #ef4444;
+}
+
+.form-group {
+    position: relative;
+}
+
+/* Show edit controls when field is visible */
+.form-group:has(input:not([style*="display: none"])) .edit-controls,
+.form-group:has(textarea:not([style*="display: none"])) .edit-controls,
+.form-group:has(select:not([style*="display: none"])) .edit-controls {
+    display: flex;
+}
+
+/* Adjust padding for fields in edit mode to accommodate buttons */
+.form-group input:not([style*="display: none"]),
+.form-group textarea:not([style*="display: none"]),
+.form-group select:not([style*="display: none"]) {
+    padding-right: 1rem;
+}
+
+/* Timeline styles */
+.timeline-list {
+    border-left: 2px solid #e2e8f0;
+    padding-left: 1.5rem;
+    margin-left: 0.5rem;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--primary-color);
+    left: -2rem;
+    top: 4px;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-date {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+}
+
+.timeline-content {
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.timeline-item.status-change::before {
+    background: var(--primary-color);
+}
+
+.timeline-item.created::before {
+    border-color: var(--priority-low);
+    background: white;
+}
+
+/* Disable hover effects for completed tasks */
+.form-group:has(+ .completed) .field-view:hover::after,
+.form-group:has(+ .completed) .field-view:hover {
+    content: none;
+    border-color: transparent;
+    background: var(--task-bg);
+    cursor: default;
+}
+
+/* Styling untuk field yang readonly (completed task) */
+.field-view.read-only {
+    pointer-events: none;
+    background: var(--task-bg);
+    border-color: transparent;
+}
+
+.field-view.read-only:hover {
+    background: var(--task-bg);
+    border-color: transparent;
+    cursor: default;
+}
+
+.field-view.read-only:hover::after {
+    content: none;
+}
+
+/* Only show edit controls when the field is in edit mode */
+.form-group:has(input:visible) .edit-controls,
+.form-group:has(textarea:visible) .edit-controls,
+.form-group:has(select:visible) .edit-controls {
+    display: flex;
+}
+
+/* Disable edit controls completely for completed tasks */
+.form-group:has(.field-view.read-only) .edit-controls {
+    display: none !important;
+}
+
+/* Markdown Content Styling */
+.markdown-content {
+    font-size: 0.875rem;
+    line-height: 1.4; /* Match dengan editor */
+}
+
+/* Reset and normalize markdown content */
+.markdown-content {
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    list-style: none; /* Remove default bullets */
+    margin: 0;
+    padding: 0;
+}
+
+.markdown-content li {
+    display: block;
+    position: relative;
+    padding-left: 1.25em;
+    margin-bottom: 0.25em;
+}
+
+.markdown-content ol {
+    counter-reset: item;
+}
+
+/* Remove any pre-wrap from all elements */
+.markdown-content,
+.markdown-content *,
+.field-view,
+.field-view * {
+    white-space: normal !important;
+}
+
+/* Only allow pre-wrap in editor */
+.markdown-editor textarea {
+    white-space: pre-wrap !important;
+}
+
+/* Reset and normalize markdown list styles */
+.markdown-content {
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    all: unset; /* Reset semua properti */
+    display: block; /* Kembalikan display block yang di-reset */
+    list-style-position: outside;
+    padding-left: 1.5rem;
+    margin: 0;
+}
+
+.markdown-content li {
+    all: unset; /* Reset semua properti */
+    display: list-item; /* Kembalikan display list-item yang di-reset */
+    line-height: 1.4;
+}
+
+.markdown-content ul li {
+    list-style-type: disc;
+}
+
+.markdown-content ol li {
+    list-style-type: decimal;
+}
+
+.markdown-content li + li {
+    margin-top: 0.25rem;
+}
+
+/* Reset default list styling */
+.markdown-content ul,
+.markdown-content ol {
+    margin: 0;
+    padding-inline-start: 1.5rem; /* Sesuaikan dengan indent yang diinginkan */
+    list-style-position: outside;
+}
+
+.markdown-content li {
+    line-height: 1.4;
+    margin: 0; /* Reset margin */
+    padding: 0; /* Reset padding */
+}
+
+.markdown-content li + li {
+    margin-top: 0.25rem; /* Spacing antar list items */
+}
+
+.markdown-content p,
+.markdown-content li {
+    line-height: 1.4; /* Eksplisit set line-height untuk list items */
+    margin-bottom: 0.25rem; /* Kurangi spacing antar items */
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    margin: 0.25rem 0; /* Reduce margin */
+    padding-left: 1.5rem;
+    line-height: 1.4; /* Pastikan parent list juga konsisten */
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4 {
+    margin: 0.5rem 0; /* Reduce margin */
+    line-height: 1.4; /* Match dengan content */
+}
+
+.markdown-content p {
+    margin-bottom: 0.5rem; /* Reduce margin */
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    margin: 0.25rem 0; /* Reduce margin */
+    padding-left: 1.5rem;
+}
+
+.markdown-content code {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+.markdown-content pre code {
+    display: block;
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: var(--text-secondary);
+}
+
+.markdown-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Style for markdown editor */
+#task-details {
+    font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", monospace;
+    font-size: 0.875rem;
+    line-height: 1.4; /* Adjust this */
+    tab-size: 4;
+}
+
+/* Markdown Editor Styles */
+.markdown-editor {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+}
+
+.markdown-editor textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 1rem;
+    border: none;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    resize: vertical;
+    white-space: pre-wrap;
+    font-family: inherit;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Webkit scrollbar styling untuk textarea */
+.markdown-editor textarea::-webkit-scrollbar {
+    width: 6px;
+}
+
+.markdown-editor textarea::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.markdown-editor textarea::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.markdown-editor textarea::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.markdown-editor textarea:focus {
+    outline: none;
+}
+
+.editor-footer {
+    padding: 8px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.editor-tip {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Remove unused toolbar styles */
+.editor-toolbar,
+.toolbar-divider,
+.markdown-guide {
+    display: none;
+}

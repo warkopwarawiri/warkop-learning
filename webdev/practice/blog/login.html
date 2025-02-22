@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BlogSpace</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="container nav-container">
+            <a href="/" class="logo">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                BlogSpace
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/articles">Articles</a>
+                <div class="dropdown">
+                    <span class="dropdown-toggle">
+                        Categories
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </span>
+                    <div class="dropdown-menu">
+                        <a href="#">Technology</a>
+                        <a href="#">Design</a>
+                        <a href="#">Development</a>
+                        <a href="#">Business</a>
+                        <a href="#">Lifestyle</a>
+                    </div>
+                </div>
+                <a href="/about">About</a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn btn-secondary">Login</button>
+                <button class="btn btn-primary">Sign Up</button>
+            </div>
+            <div class="mobile-menu">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="auth-container">
+            <div class="auth-box">
+                <h2>Welcome Back</h2>
+                <p class="auth-subtitle">Sign in to continue to BlogSpace</p>
+                
+                <form class="auth-form">
+                    <div class="form-group">
+                        <input type="email" placeholder="Email address" required>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="Password" required>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="form-options">
+                        <label>
+                            <input type="checkbox"> Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="auth-submit">Sign In</button>
+                </form>
+                
+                <div class="auth-links">
+                    Don't have an account? <a href="signup.html">Sign up</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
